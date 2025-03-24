@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#CCE0FF">
+
+    <!-- ViewPager2 to display the slides -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <!-- "Next" Button to navigate between slides -->
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="233dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="150dp"
+        android:backgroundTint="#FFFFFF"
+        android:padding="15dp"
+        android:text="Next"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+</LinearLayout>
