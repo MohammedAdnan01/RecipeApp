@@ -2,15 +2,14 @@ package com.example.swiftbite
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.os.Handler
-import android.os.Looper
-import androidx.viewpager2.widget.ViewPager2
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,5 +24,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish() // Optional: Close the welcome screen so the user cannot go back to it
         }, 2000) // 2 seconds delay
+
+        auth = FirebaseAuth.getInstance()
+    }
+
+    fun signOut(view: View) {
+        auth.signOut()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
