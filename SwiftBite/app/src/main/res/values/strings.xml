@@ -3,4 +3,5 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login_options">LoginOptionsActivity</string>
+    <string name="api_key">64b8bc4c5ea144e282469a4de0200299</string>
 </resources>
