@@ -1,5 +1,6 @@
 package com.example.swiftbite
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.RandomRecipeAdapter
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
 import com.example.swiftbite.Models.RandomRecipeApiResponse
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
@@ -32,6 +34,27 @@ class HomeActivity : AppCompatActivity() {
 
         // Simulating delay for dismissing loading dialog
         window.decorView.postDelayed({ dismissLoadingDialog() }, 3000)
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    return@setOnItemSelectedListener true //Already in this Activity
+                }
+                R.id.nav_explore -> {
+                    val intent = Intent(this, SocialMediaActivity::class.java)
+                    startActivity(intent)
+                    return@setOnItemSelectedListener true
+                }
+                R.id.nav_profile -> {
+                    val intent = Intent(this, UserProfileActivity::class.java)
+                    startActivity(intent)
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
+        }
     }
 
     private fun showLoadingDialog() {
