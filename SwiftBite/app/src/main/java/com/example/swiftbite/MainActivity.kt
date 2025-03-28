@@ -3,9 +3,9 @@ package com.example.swiftbite
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Add a delay to show the welcome screen
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             // After 2 seconds, transition to the ViewPager2 screen (activity_slider)
             val intent = Intent(this, SliderActivity::class.java)
             startActivity(intent)
