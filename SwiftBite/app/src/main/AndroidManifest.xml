@@ -44,6 +44,8 @@
             android:exported="false" />
 
         <activity android:name=".HomeActivity" />
+        <activity android:name=".SocialMediaActivity" />
+        <activity android:name=".SettingActivity" />
     </application>
 
 </manifest>

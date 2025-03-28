@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#CCE0FF">
+    android:background="@color/bg_lightblue">
 
-    <EditText
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search"
-        android:background="@android:drawable/edit_text"
-        android:padding="10dp"
-        android:layout_margin="16dp"
-        android:drawableEnd="@android:drawable/ic_menu_search" />
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="8dp"
+        android:layout_margin="16dp">
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView_home"
+            android:layout_width="match_parent"
+            app:iconifiedByDefault="false"
+            app:searchIcon="@drawable/ic_search"
+            android:layout_height="match_parent"
+            app:queryHint="Search your recipe..."/>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:layout_width="wrap_content"
