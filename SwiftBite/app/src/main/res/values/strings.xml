@@ -20,4 +20,5 @@
         <item>snack</item>
         <item>drink</item>
     </string-array>
+    <string name="title_activity_ingredient_input">IngredientActivity</string>
 </resources>

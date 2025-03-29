@@ -3,6 +3,7 @@ package com.example.swiftbite
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView // Updated import
 import android.widget.Toast
@@ -91,6 +92,14 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             false
+        }
+
+        // Find the Explore button and set up a click listener
+        val exploreButton = findViewById<Button>(R.id.exploreButton)
+        exploreButton.setOnClickListener {
+            // When the Explore button is clicked, open IngredientsActivity
+            val intent = Intent(this, IngredientActivity::class.java)
+            startActivity(intent)
         }
     }
 
