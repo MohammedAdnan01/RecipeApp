@@ -4,7 +4,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ProgressBar
-import androidx.appcompat.widget.SearchView // Updated import
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
