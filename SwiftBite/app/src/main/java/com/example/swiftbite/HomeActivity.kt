@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.speech.RecognitionListener
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +27,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var randomRecipeAdapter: RandomRecipeAdapter
     private lateinit var recyclerView: RecyclerView
     private val tags = mutableListOf<String>()
+
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var recognizerIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +108,74 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, IngredientActivity::class.java)
             startActivity(intent)
         }
+        initializeSpeechRecognizer()
+
+        // Set up microphone button to start speech recognition
+        val micButton = findViewById<ImageView>(R.id.micButton)
+        micButton.setOnClickListener {
+            // Start listening to the microphone
+            speechRecognizer.startListening(recognizerIntent)
+        }
     }
+
+    private fun initializeSpeechRecognizer() {
+        try {
+            // Check if speech recognition is available
+            if (SpeechRecognizer.isRecognitionAvailable(this)) {
+                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+                recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+
+                // Set up the recognition listener
+                speechRecognizer.setRecognitionListener(object : RecognitionListener {
+                    override fun onReadyForSpeech(params: Bundle?) {}
+                    override fun onBeginningOfSpeech() {}
+                    override fun onRmsChanged(rmsdB: Float) {}
+                    override fun onBufferReceived(buffer: ByteArray?) {}
+                    override fun onEndOfSpeech() {}
+                    override fun onError(error: Int) {
+                        val errorMessage = when (error) {
+                            SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
+                            SpeechRecognizer.ERROR_CLIENT -> "Other client-side errors"
+                            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                            SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                            SpeechRecognizer.ERROR_NO_MATCH -> "No speech match"
+                            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "RecognitionService is busy"
+                            SpeechRecognizer.ERROR_SERVER -> "Server error"
+                            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
+                            else -> "Unknown error"
+                        }
+                        Toast.makeText(this@HomeActivity, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+                    }
+                    override fun onResults(results: Bundle?) {
+                        val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        if (matches != null && matches.isNotEmpty()) {
+                            val spokenText = matches[0]
+                            // Use the recognized text for searching
+                            searchRecipes(spokenText)
+                        }
+                    }
+                    override fun onPartialResults(partialResults: Bundle?) {}
+                    override fun onEvent(eventType: Int, params: Bundle?) {}
+                })
+            } else {
+                Toast.makeText(this, "Speech recognition is not available on this device.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Error initializing SpeechRecognizer", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun searchRecipes(query: String) {
+        tags.clear()
+        tags.add(query)
+        manager.getRandomRecipes(randomRecipeResponseListener, tags)
+        dialog?.show()
+    }
+
+
 
     private fun showLoadingDialog() {
         val progressBar = ProgressBar(this)

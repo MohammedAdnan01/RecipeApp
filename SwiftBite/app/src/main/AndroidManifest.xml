@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+
 
     <application
         android:allowBackup="true"
@@ -14,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftBite"
+        android:name=".MyApp"
         tools:targetApi="31">
         <activity
             android:name=".IngredientActivity"
@@ -50,6 +55,13 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".SocialMediaActivity" />
         <activity android:name=".SettingActivity" />
+
+        <service
+            android:name=".services.BackgroundMusic"
+            android:foregroundServiceType="mediaPlayback"
+            android:enabled="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

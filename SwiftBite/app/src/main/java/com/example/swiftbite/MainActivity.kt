@@ -6,6 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.swiftbite.services.BackgroundMusic
+
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        // Start the background music service
+        val musicIntent = Intent(this, BackgroundMusic::class.java)
+        startService(musicIntent)
+
     }
 
     fun signOut(view: View) {
@@ -35,5 +41,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Optional: Do not stop the music here, it will continue running in the background.
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.swiftbite.services.BackgroundMusic
 
 class SliderActivity : AppCompatActivity() {
 
@@ -42,5 +43,7 @@ class SliderActivity : AppCompatActivity() {
                 }
             }
         })
+        val musicIntent = Intent(this, BackgroundMusic::class.java)
+        startService(musicIntent)
     }
 }
