@@ -41,8 +41,9 @@ class IngredientActivity : AppCompatActivity() {
         // Button to recommend dishes
         val recommendButton = findViewById<Button>(R.id.buttonRecommendDishes)
         recommendButton.setOnClickListener {
-            // Navigate to the next activity
-            //val intent = Intent(this, RecommendDishesActivity::class.java)
+            // Navigate to the next activity and pass the ingredients list
+            val intent = Intent(this, RecommendDishesActivity::class.java)
+            intent.putStringArrayListExtra("ingredients", ArrayList(ingredients))  // Passing ingredients list
             startActivity(intent)
         }
     }

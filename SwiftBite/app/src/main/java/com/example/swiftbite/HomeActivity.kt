@@ -1,14 +1,24 @@
 package com.example.swiftbite
 
+import android.Manifest
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.os.Bundle
+
 import android.util.Log
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.RandomRecipeAdapter
@@ -24,6 +34,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var randomRecipeAdapter: RandomRecipeAdapter
     private lateinit var recyclerView: RecyclerView
     private val tags = mutableListOf<String>()
+
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var recognizerIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,16 +58,11 @@ class HomeActivity : AppCompatActivity() {
 
         // Initialize search view
         val searchView = findViewById<SearchView>(R.id.searchView_home)
-        if (searchView == null) {
-            Toast.makeText(this, "SearchView not found in layout", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 tags.clear()
-                if (query != null) {
-                    tags.add(query)
+                query?.let {
+                    tags.add(it)
                     manager.getRandomRecipes(randomRecipeResponseListener, tags)
                     dialog?.show()
                 }
@@ -67,41 +75,134 @@ class HomeActivity : AppCompatActivity() {
         })
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        if (bottomNav == null) {
-            Toast.makeText(this, "BottomNavigationView not found in layout", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
-
-        bottomNav.menu.findItem(R.id.nav_home).isChecked = true
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    return@setOnItemSelectedListener true // Already in this Activity
+        bottomNav?.apply {
+            menu.findItem(R.id.nav_home).isChecked = true
+            setOnItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.nav_home -> {
+                        return@setOnItemSelectedListener true // Already in this Activity
+                    }
+                    R.id.nav_explore -> {
+                        val intent = Intent(this@HomeActivity, IngredientActivity::class.java)
+                        startActivity(intent, ActivityOptions.makeCustomAnimation(this@HomeActivity, 0, 0).toBundle())
+                        return@setOnItemSelectedListener true
+                    }
+                    R.id.nav_setting -> {
+                        val intent = Intent(this@HomeActivity, SettingActivity::class.java)
+                        startActivity(intent, ActivityOptions.makeCustomAnimation(this@HomeActivity, 0, 0).toBundle())
+                        return@setOnItemSelectedListener true
+                    }
                 }
-                R.id.nav_explore -> {
-                    val intent = Intent(this, SocialMediaActivity::class.java)
-                    startActivity(intent, options.toBundle())
-                    return@setOnItemSelectedListener true
-                }
-                R.id.nav_setting -> {
-                    val intent = Intent(this, SettingActivity::class.java)
-                    startActivity(intent, options.toBundle())
-                    return@setOnItemSelectedListener true
-                }
+                false
             }
-            false
         }
 
-	// Find the Explore button and set up a click listener
         val exploreButton = findViewById<Button>(R.id.exploreButton)
         exploreButton.setOnClickListener {
-            // When the Explore button is clicked, open IngredientsActivity
-            val intent = Intent(this, IngredientActivity::class.java)
+            //val intent = Intent(this, IngredientActivity::class.java)
             startActivity(intent)
         }
+
+        initializeSpeechRecognizer()
+
+        // Set up microphone button for speech recognition
+        val micButton = findViewById<ImageView>(R.id.micButton)
+        micButton.setOnClickListener {
+            if (isNetworkAvailable()) {
+                if (isAudioPermissionGranted()) {
+                    speechRecognizer.startListening(recognizerIntent)
+                    showListeningFeedback(true)
+                } else {
+                    requestAudioPermission()
+                }
+            } else {
+                Toast.makeText(this@HomeActivity, "No network connection. Please check your internet.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun initializeSpeechRecognizer() {
+        try {
+            if (SpeechRecognizer.isRecognitionAvailable(this)) {
+                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+                recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+
+                if (SpeechRecognizer.isRecognitionAvailable(this)) {
+                    recognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+                }
+
+                speechRecognizer.setRecognitionListener(object : RecognitionListener {
+                    override fun onReadyForSpeech(params: Bundle?) {}
+
+                    override fun onBeginningOfSpeech() {}
+
+                    override fun onRmsChanged(rmsdB: Float) {}
+
+                    override fun onBufferReceived(buffer: ByteArray?) {}
+
+                    override fun onEndOfSpeech() {}
+
+                    override fun onError(error: Int) {
+                        val errorMessage = when (error) {
+                            SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
+                            SpeechRecognizer.ERROR_CLIENT -> "Other client-side errors"
+                            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                            SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+                            SpeechRecognizer.ERROR_NO_MATCH -> "No speech match"
+                            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "RecognitionService is busy"
+                            SpeechRecognizer.ERROR_SERVER -> "Server error"
+                            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Speech timeout"
+                            else -> "Unknown error"
+                        }
+                        Toast.makeText(this@HomeActivity, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onResults(results: Bundle?) {
+                        val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                        if (!matches.isNullOrEmpty()) {
+                            val spokenText = matches[0]
+                            searchRecipes(spokenText)
+                        }
+                    }
+
+                    override fun onPartialResults(partialResults: Bundle?) {}
+
+                    override fun onEvent(eventType: Int, params: Bundle?) {}
+                })
+            } else {
+                Toast.makeText(this, "Speech recognition is not available on this device.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Error initializing SpeechRecognizer", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun searchRecipes(query: String) {
+        tags.clear()
+        tags.add(query)
+        manager.getRandomRecipes(randomRecipeResponseListener, tags)
+        dialog?.show()
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
+    private fun showListeningFeedback(isListening: Boolean) {
+        // Show some visual feedback (e.g., change button state, show animation)
+    }
+
+    private fun isAudioPermissionGranted(): Boolean {
+        return checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestAudioPermission() {
+        requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), 1)
     }
 
     private fun showLoadingDialog() {
@@ -122,10 +223,13 @@ class HomeActivity : AppCompatActivity() {
         override fun didFetch(response: RandomRecipeApiResponse, message: String) {
             dialog?.dismiss()
             recyclerView = findViewById(R.id.recycler_random)
-            if (recyclerView == null) {
-                Toast.makeText(this@HomeActivity, "RecyclerView not found in layout", Toast.LENGTH_LONG).show()
-                return
+            recyclerView?.apply {
+                setHasFixedSize(true)
+                layoutManager = GridLayoutManager(this@HomeActivity, 1)
+                randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList())
+                adapter = randomRecipeAdapter
             }
+
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = GridLayoutManager(this@HomeActivity, 1)
             randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList(), recipeClickListener)
@@ -144,4 +248,5 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this@HomeActivity, RecipeDetailsActivity::class.java).putExtra("id", id))
         }
     }
+}
 }

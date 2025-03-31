@@ -1,6 +1,7 @@
 package com.example.swiftbite
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -10,12 +11,19 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+        sharedPreferences = getSharedPreferences("SwiftBitePrefs", MODE_PRIVATE)
+
+        // If user is already logged in, go to HomeActivity directly
+        if (auth.currentUser != null) {
+            navigateToHome()
+        }
     }
 
     fun login(view: View) {
@@ -33,9 +41,11 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    // Save login state
+                    sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
+                    navigateToHome()
+                } else {
+                    Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener { exception ->
@@ -43,8 +53,14 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    /*fun goToRegister(view: View) {
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish() // Close LoginActivity so user cannot go back
+    }
+
+    fun goToRegister(view: View) {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
-    }*/
+    }
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.swiftbite.services.BackgroundMusic
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
@@ -14,6 +15,9 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        val musicIntent = Intent(this, BackgroundMusic::class.java)
+        startService(musicIntent)
 
         auth= FirebaseAuth.getInstance()
     }

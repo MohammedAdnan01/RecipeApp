@@ -22,4 +22,5 @@
     </string-array>
     <string name="title_activity_ingredient_input">IngredientActivity</string>
     <string name="title_activity_recipe_details">Recipe Details</string>
+    <string name="title_activity_recommend_dishes">RecommendDishesActivity</string>
 </resources>
