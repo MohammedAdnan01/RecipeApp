@@ -37,7 +37,7 @@ class SettingActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_explore -> {
-                    val intent = Intent(this, SocialMediaActivity::class.java)
+                    val intent = Intent(this, IngredientActivity::class.java)
                     startActivity(intent)
                     startActivity(intent, options.toBundle())
                     return@setOnItemSelectedListener true

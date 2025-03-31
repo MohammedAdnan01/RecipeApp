@@ -80,7 +80,7 @@ class HomeActivity : AppCompatActivity() {
                         return@setOnItemSelectedListener true // Already in this Activity
                     }
                     R.id.nav_explore -> {
-                        val intent = Intent(this@HomeActivity, SocialMediaActivity::class.java)
+                        val intent = Intent(this@HomeActivity, IngredientActivity::class.java)
                         startActivity(intent, ActivityOptions.makeCustomAnimation(this@HomeActivity, 0, 0).toBundle())
                         return@setOnItemSelectedListener true
                     }
@@ -97,7 +97,7 @@ class HomeActivity : AppCompatActivity() {
         // Explore button listener
         val exploreButton = findViewById<Button>(R.id.exploreButton)
         exploreButton.setOnClickListener {
-            val intent = Intent(this, IngredientActivity::class.java)
+            //val intent = Intent(this, IngredientActivity::class.java)
             startActivity(intent)
         }
 

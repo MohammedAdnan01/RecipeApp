@@ -1,7 +1,10 @@
 package com.example.swiftbite
 
 import android.content.Context
+import android.util.Log
+import com.example.swiftbite.Listeners.IngredientRecipeResponseListener
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
+import com.example.swiftbite.Models.IngredientBasedRecipe
 import com.example.swiftbite.Models.RandomRecipeApiResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,6 +20,7 @@ class RequestManager(private val context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    // Existing method for random recipes
     fun getRandomRecipes(listener: RandomRecipeResponseListener, tags: List<String>) {
         val callRandomRecipes = retrofit.create(CallRandomRecipes::class.java)
         val call = callRandomRecipes.callRandomRecipe(context.getString(R.string.api_key), "10", tags)
@@ -32,11 +36,57 @@ class RequestManager(private val context: Context) {
             }
 
             override fun onFailure(call: Call<RandomRecipeApiResponse>, t: Throwable) {
-                listener.didError(t.message ?: "Unknown error occurred") //listener.didError(t.message)
+                listener.didError(t.message ?: "Unknown error occurred")
             }
         })
     }
 
+    fun getRecipesByIngredients(listener: IngredientRecipeResponseListener, ingredients: List<String>) {
+        val callRecipeByIngredients = retrofit.create(CallRecipeByIngredients::class.java)
+
+        // Convert ingredients list to a comma-separated string
+        val ingredientList = ingredients.joinToString(",")  // Convert list to "carrots,tomatoes"
+
+        // Log the constructed URL for debugging purposes
+        Log.d("Request URL", "https://api.spoonacular.com/recipes/findByIngredients?apiKey=${context.getString(R.string.api_key)}&ingredients=$ingredientList&number=10")
+
+        // Make the call to the API endpoint
+        val call = callRecipeByIngredients.callRecipeByIngredients(
+            context.getString(R.string.api_key),  // API Key
+            ingredientList,  // Comma-separated ingredients
+            "10"  // Number of recipes
+        )
+
+        // Handle the response
+        call.enqueue(object : Callback<List<IngredientBasedRecipe>> {
+            override fun onResponse(call: Call<List<IngredientBasedRecipe>>, response: Response<List<IngredientBasedRecipe>>) {
+                if (!response.isSuccessful) {
+                    listener.didError("Error: ${response.message()}")  // Handle unsuccessful responses
+                    return
+                }
+                response.body()?.let {
+                    listener.didFetch(it, response.message())  // Successfully fetched data
+                } ?: listener.didError("No data received from API")  // Handle empty body
+            }
+
+            override fun onFailure(call: Call<List<IngredientBasedRecipe>>, t: Throwable) {
+                listener.didError(t.message ?: "Unknown error occurred")  // Handle failure
+            }
+        })
+    }
+
+    // Interface for recipes based on ingredients API call
+    private interface CallRecipeByIngredients {
+        @GET("recipes/findByIngredients")
+        fun callRecipeByIngredients(
+            @Query("apiKey") apiKey: String,
+            @Query("ingredients") ingredients: String,  // Ingredients as a comma-separated list
+            @Query("number") number: String
+        ): Call<List<IngredientBasedRecipe>>  // List of IngredientBasedRecipe objects
+    }
+
+
+    // Interface for random recipes API call
     private interface CallRandomRecipes {
         @GET("recipes/random")
         fun callRandomRecipe(
@@ -45,4 +95,5 @@ class RequestManager(private val context: Context) {
             @Query("tags") tags: List<String>
         ): Call<RandomRecipeApiResponse>
     }
+
 }
