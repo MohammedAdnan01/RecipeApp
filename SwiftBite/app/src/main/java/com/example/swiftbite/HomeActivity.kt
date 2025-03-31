@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.RandomRecipeAdapter
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
+import com.example.swiftbite.Listeners.RecipeClickListener
 import com.example.swiftbite.Models.RandomRecipeApiResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -94,7 +95,7 @@ class HomeActivity : AppCompatActivity() {
             false
         }
 
-        // Find the Explore button and set up a click listener
+	// Find the Explore button and set up a click listener
         val exploreButton = findViewById<Button>(R.id.exploreButton)
         exploreButton.setOnClickListener {
             // When the Explore button is clicked, open IngredientsActivity
@@ -127,13 +128,20 @@ class HomeActivity : AppCompatActivity() {
             }
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = GridLayoutManager(this@HomeActivity, 1)
-            randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList())
+            randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList(), recipeClickListener)
             recyclerView.adapter = randomRecipeAdapter
         }
 
         override fun didError(message: String) {
             dialog?.dismiss()
             Toast.makeText(this@HomeActivity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val recipeClickListener: RecipeClickListener = object : RecipeClickListener {
+        override fun onRecipeClicked(id: String) {
+            //Toast.makeText(this@HomeActivity, id, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this@HomeActivity, RecipeDetailsActivity::class.java).putExtra("id", id))
         }
     }
 }
