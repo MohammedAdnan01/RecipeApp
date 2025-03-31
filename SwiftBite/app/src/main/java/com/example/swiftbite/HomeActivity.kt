@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
+
+import android.util.Log
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.RandomRecipeAdapter
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
+import com.example.swiftbite.Listeners.RecipeClickListener
 import com.example.swiftbite.Models.RandomRecipeApiResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -94,7 +97,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // Explore button listener
         val exploreButton = findViewById<Button>(R.id.exploreButton)
         exploreButton.setOnClickListener {
             //val intent = Intent(this, IngredientActivity::class.java)
@@ -227,6 +229,11 @@ class HomeActivity : AppCompatActivity() {
                 randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList())
                 adapter = randomRecipeAdapter
             }
+
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager = GridLayoutManager(this@HomeActivity, 1)
+            randomRecipeAdapter = RandomRecipeAdapter(this@HomeActivity, response.recipes ?: emptyList(), recipeClickListener)
+            recyclerView.adapter = randomRecipeAdapter
         }
 
         override fun didError(message: String) {
@@ -234,4 +241,12 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this@HomeActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
+
+    private val recipeClickListener: RecipeClickListener = object : RecipeClickListener {
+        override fun onRecipeClicked(id: String) {
+            Log.d("HomeActivity", "Starting RecipeDetailsActivity with id: $id")
+            startActivity(Intent(this@HomeActivity, RecipeDetailsActivity::class.java).putExtra("id", id))
+        }
+    }
+}
 }
