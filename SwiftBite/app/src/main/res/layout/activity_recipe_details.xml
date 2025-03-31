@@ -8,10 +8,31 @@
     android:orientation="vertical"
     android:background="@color/bg_lightblue">
 
-    <androidx.appcompat.widget.Toolbar
-        app:title="Recipe Details"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Recipe Details"
+            android:titleTextColor="@android:color/white" />
+
+        <!-- Share Button -->
+        <Button
+            android:id="@+id/btn_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Share"
+            android:textColor="@android:color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"

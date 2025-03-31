@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
 import com.example.swiftbite.Listeners.RecipeDetailsListener
 import com.example.swiftbite.Listeners.IngredientRecipeResponseListener
-import com.example.swiftbite.Listeners.RandomRecipeResponseListener
 import com.example.swiftbite.Models.IngredientBasedRecipe
 import com.example.swiftbite.Models.RandomRecipeApiResponse
 import com.example.swiftbite.Models.RecipeDetailsResponse
@@ -128,5 +127,4 @@ class RequestManager(private val context: Context) {
             @Query("apiKey") apiKey: String
         ): Call<RecipeDetailsResponse>
     }
-}
 }

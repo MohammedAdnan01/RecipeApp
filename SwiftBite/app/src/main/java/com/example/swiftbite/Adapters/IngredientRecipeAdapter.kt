@@ -22,9 +22,8 @@ class IngredientRecipeAdapter(private val context: Context, private val list: Li
     override fun onBindViewHolder(holder: IngredientRecipeViewHolder, position: Int) {
         holder.textView_title.text = list[position].title
         holder.textView_title.isSelected = true
-        holder.textView_likes.text = "${list[position].likes} Likes"
-        holder.textView_servings.text = "${list[position].usedIngredientCount} Used Ingredients"
-        holder.textView_time.text = "${list[position].missedIngredientCount} Missing Ingredients"
+        holder.textView_servings.text = "${list[position].usedIngredientCount} Servings"
+        holder.textView_time.text = "${list[position].missedIngredientCount} Ingredients"
         Picasso.get().load(list[position].image).into(holder.imageView_food)
     }
 
@@ -37,7 +36,6 @@ class IngredientRecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
     val random_list_container: CardView = itemView.findViewById(R.id.random_list_container)
     val textView_title: TextView = itemView.findViewById(R.id.textView_title)
     val textView_servings: TextView = itemView.findViewById(R.id.textView_servings)
-    val textView_likes: TextView = itemView.findViewById(R.id.textView_likes)
     val textView_time: TextView = itemView.findViewById(R.id.textView_time)
     val imageView_food: ImageView = itemView.findViewById(R.id.imageView_food)
 }
