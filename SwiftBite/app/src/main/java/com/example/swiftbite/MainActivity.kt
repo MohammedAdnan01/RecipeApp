@@ -1,7 +1,7 @@
 package com.example.swiftbite
 
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,15 +9,13 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.swiftbite.services.BackgroundMusic
-
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-
-    private val TAG = "FCM"
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,40 +23,41 @@ class MainActivity : AppCompatActivity() {
         // Set the content view to your welcome screen
         setContentView(R.layout.activity_main)
 
-        // Add a delay to show the welcome screen
+        auth = FirebaseAuth.getInstance()
+        sharedPreferences = getSharedPreferences("SwiftBitePrefs", MODE_PRIVATE)
+
+        // Check if it's the first time opening the app
+        val isFirstTime = sharedPreferences.getBoolean("isFirstTime", true)
+        val user = auth.currentUser
+
         Handler(Looper.getMainLooper()).postDelayed({
-            // After 2 seconds, transition to the ViewPager2 screen (activity_slider)
-            val intent = Intent(this, SliderActivity::class.java)
-            startActivity(intent)
-            finish() // Optional: Close the welcome screen so the user cannot go back to it
+            when {
+                isFirstTime -> {
+                    // First-time user → Show SliderActivity
+                    sharedPreferences.edit().putBoolean("isFirstTime", false).apply()
+                    startActivity(Intent(this, SliderActivity::class.java))
+                }
+                user != null -> {
+                    // User is already logged in → Go to HomeActivity
+                    startActivity(Intent(this, HomeActivity::class.java))
+                }
+                else -> {
+                    // No user logged in → Go to LoginActivity
+                    startActivity(Intent(this, LoginOptionsActivity::class.java))
+                }
+            }
+            finish() // Close MainActivity so it's not in the back stack
         }, 2000) // 2 seconds delay
 
-        auth = FirebaseAuth.getInstance()
-
-        // Start the background music service
+        // Start background music service
         val musicIntent = Intent(this, BackgroundMusic::class.java)
         startService(musicIntent)
 
+        // Subscribe to Firebase Messaging Topic
         FirebaseMessaging.getInstance().subscribeToTopic("all")
             .addOnCompleteListener { task ->
-                var msg = "Subscribed to all"
-                if (!task.isSuccessful) {
-                    msg = "Subscription failed"
-                }
-                Log.d(TAG, msg)
+                val msg = if (task.isSuccessful) "Subscribed to all" else "Subscription failed"
+                Log.d("FCM", msg)
             }
-
-    }
-
-    fun signOut(view: View) {
-        auth.signOut()
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // Optional: Do not stop the music here, it will continue running in the background.
     }
 }
