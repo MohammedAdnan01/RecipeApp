@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.swiftbite.services.BackgroundMusic
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var switchBgMusic: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,19 @@ class SettingActivity : AppCompatActivity() {
                 }
             }
             false
+        }
+
+        switchBgMusic = findViewById(R.id.switch_bg_music)
+
+        // Set initial switch state based on service status
+        switchBgMusic.isChecked = BackgroundMusic.isRunning
+
+        switchBgMusic.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                startService(Intent(this, BackgroundMusic::class.java))
+            } else {
+                stopService(Intent(this, BackgroundMusic::class.java))
+            }
         }
     }
 
