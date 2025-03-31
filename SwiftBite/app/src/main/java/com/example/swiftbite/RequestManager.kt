@@ -1,6 +1,7 @@
 package com.example.swiftbite
 
 import android.content.Context
+import android.util.Log
 import com.example.swiftbite.Listeners.RandomRecipeResponseListener
 import com.example.swiftbite.Listeners.RecipeDetailsListener
 import com.example.swiftbite.Models.RandomRecipeApiResponse
@@ -35,7 +36,7 @@ class RequestManager(private val context: Context) {
             }
 
             override fun onFailure(call: Call<RandomRecipeApiResponse>, t: Throwable) {
-                listener.didError(t.message ?: "Unknown error occurred") //listener.didError(t.message)
+                listener.didError(t.message ?: "Unknown error occurred")
             }
         })
     }
@@ -49,7 +50,10 @@ class RequestManager(private val context: Context) {
                     listener.didError(response.message())
                     return
                 }
-                listener.didFetch(response.body()!!, response.message())
+                response.body()?.let {
+                    Log.d("RequestManager", "Ingredients size: ${it.extendedIngredients?.size ?: 0}")
+                    listener.didFetch(it, response.message())
+                } ?: listener.didError("No data received from API")
             }
 
             override fun onFailure(call: Call<RecipeDetailsResponse>, t: Throwable) {

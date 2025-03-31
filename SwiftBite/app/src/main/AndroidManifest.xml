@@ -50,6 +50,10 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".SocialMediaActivity" />
         <activity android:name=".SettingActivity" />
+        <activity android:name=".RecipeDetailsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_recipe_details"
+            android:theme="@style/Theme.SwiftBite" />
     </application>
 
 </manifest>

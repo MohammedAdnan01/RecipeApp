@@ -1,6 +1,7 @@
 package com.example.swiftbite.Adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +23,14 @@ class IngredientsAdapter(
     }
 
     override fun onBindViewHolder(holder: IngredientsViewHolder, position: Int) {
-        holder.textViewIngredientsName.text = list[position].name
+        val ingredient = list[position]
+        Log.d("IngredientsAdapter", "Binding ingredient: ${ingredient.name}, ${ingredient.original}, ${ingredient.image}")
+        holder.textViewIngredientsName.text = ingredient.name ?: "Unknown"
         holder.textViewIngredientsName.isSelected = true
-        holder.textViewIngredientsQuantity.text = list[position].original
+        holder.textViewIngredientsQuantity.text = ingredient.original ?: "N/A"
         holder.textViewIngredientsQuantity.isSelected = true
-        Picasso.get().load("https://spoonacular.com/cdn/ingredients_100x100/${list[position].image}").into(holder.imageViewIngredients)
+        val imageUrl = ingredient.image?.let { "https://spoonacular.com/cdn/ingredients_100x100/$it" } ?: ""
+        Picasso.get().load(imageUrl).into(holder.imageViewIngredients)
     }
 
     override fun getItemCount(): Int {
@@ -39,4 +43,3 @@ class IngredientsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     val textViewIngredientsName: TextView = itemView.findViewById(R.id.textView_ingredients_name)
     val imageViewIngredients: ImageView = itemView.findViewById(R.id.imageView_ingredients)
 }
-

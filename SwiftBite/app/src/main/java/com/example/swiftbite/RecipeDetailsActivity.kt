@@ -2,6 +2,7 @@ package com.example.swiftbite
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -55,13 +56,15 @@ class RecipeDetailsActivity : AppCompatActivity() {
             textView_meal_summary.text = response.summary
             Picasso.get().load(response.image).into(imageView_meal_image)
 
+            Log.d("RecipeDetailsActivity", "Passing ingredients to adapter: ${response.extendedIngredients?.size ?: 0}")
             recycler_meal_ingredients.setHasFixedSize(true)
-            recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity,LinearLayoutManager.HORIZONTAL,false)
-            ingredientsAdapter = IngredientsAdapter(this@RecipeDetailsActivity, response.extendedIngredients)
+            recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity, LinearLayoutManager.HORIZONTAL, false)
+            ingredientsAdapter = IngredientsAdapter(this@RecipeDetailsActivity, response.extendedIngredients ?: emptyList())
             recycler_meal_ingredients.adapter = ingredientsAdapter
         }
 
         override fun didError(message: String) {
+            dialog.dismiss()
             Toast.makeText(this@RecipeDetailsActivity, message, Toast.LENGTH_SHORT).show()
         }
     }

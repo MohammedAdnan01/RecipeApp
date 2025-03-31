@@ -3,7 +3,7 @@ package com.example.swiftbite
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
@@ -140,7 +140,7 @@ class HomeActivity : AppCompatActivity() {
 
     private val recipeClickListener: RecipeClickListener = object : RecipeClickListener {
         override fun onRecipeClicked(id: String) {
-            //Toast.makeText(this@HomeActivity, id, Toast.LENGTH_SHORT).show()
+            Log.d("HomeActivity", "Starting RecipeDetailsActivity with id: $id")
             startActivity(Intent(this@HomeActivity, RecipeDetailsActivity::class.java).putExtra("id", id))
         }
     }
