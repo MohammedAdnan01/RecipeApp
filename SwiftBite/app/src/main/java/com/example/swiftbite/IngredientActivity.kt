@@ -1,5 +1,6 @@
 package com.example.swiftbite
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.ads.mediationtestsuite.activities.HomeActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class IngredientActivity : AppCompatActivity() {
 
@@ -45,6 +48,32 @@ class IngredientActivity : AppCompatActivity() {
             val intent = Intent(this, RecommendDishesActivity::class.java)
             intent.putStringArrayListExtra("ingredients", ArrayList(ingredients))  // Passing ingredients list
             startActivity(intent)
+        }
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+
+        bottomNav.menu.findItem(R.id.nav_explore).isChecked = true
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent, options.toBundle())
+                    return@setOnItemSelectedListener true
+
+                }
+                R.id.nav_explore -> {
+                    return@setOnItemSelectedListener true // Already in this activity
+                }
+                R.id.nav_setting -> {
+                    intent = Intent(this, SettingActivity::class.java)
+                    startActivity(intent, options.toBundle())
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
         }
     }
 

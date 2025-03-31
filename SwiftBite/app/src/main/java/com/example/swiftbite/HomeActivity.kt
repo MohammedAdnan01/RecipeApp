@@ -75,26 +75,28 @@
             })
 
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-            bottomNav?.apply {
-                menu.findItem(R.id.nav_home).isChecked = true
-                setOnItemSelectedListener { item ->
-                    when (item.itemId) {
-                        R.id.nav_home -> {
-                            return@setOnItemSelectedListener true // Already in this Activity
-                        }
-                        R.id.nav_explore -> {
-                            val intent = Intent(this@HomeActivity, IngredientActivity::class.java)
-                            startActivity(intent, ActivityOptions.makeCustomAnimation(this@HomeActivity, 0, 0).toBundle())
-                            return@setOnItemSelectedListener true
-                        }
-                        R.id.nav_setting -> {
-                            val intent = Intent(this@HomeActivity, SettingActivity::class.java)
-                            startActivity(intent, ActivityOptions.makeCustomAnimation(this@HomeActivity, 0, 0).toBundle())
-                            return@setOnItemSelectedListener true
-                        }
+
+            val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+
+            bottomNav.menu.findItem(R.id.nav_home).isChecked = true
+
+            bottomNav.setOnItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.nav_home -> {
+                        return@setOnItemSelectedListener true // Already in this activity
                     }
-                    false
+                    R.id.nav_explore -> {
+                        val intent = Intent(this, IngredientActivity::class.java)
+                        startActivity(intent, options.toBundle())
+                        return@setOnItemSelectedListener true
+                    }
+                    R.id.nav_setting -> {
+                        intent = Intent(this, SettingActivity::class.java)
+                        startActivity(intent, options.toBundle())
+                        return@setOnItemSelectedListener true
+                    }
                 }
+                false
             }
 
             initializeSpeechRecognizer()
