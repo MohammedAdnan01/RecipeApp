@@ -3,7 +3,9 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login_options">LoginOptionsActivity</string>
-    <string name="api_key">64b8bc4c5ea144e282469a4de0200299</string>
+    <!-- <string name="api_key">64b8bc4c5ea144e282469a4de0200299</string> Adnan API Key-->
+    <string name="api_key">c8e4e629f7974ff492f9cf13fac7fd63</string> <!-- Anurag API Key-->
+    <!-- <string name="api_key">c7e2c28ea0424e39b9e6a8cca92ac852</string> Test API Key-->
     <string-array name="tags">
         <item>main course</item>
         <item>side dish</item>

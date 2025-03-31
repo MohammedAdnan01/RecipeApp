@@ -23,7 +23,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private lateinit var textView_meal_summary: TextView
     private lateinit var imageView_meal_image: ImageView
     private lateinit var recycler_meal_ingredients: RecyclerView
-    private lateinit var ingredientsAdapter : IngredientsAdapter
+    private lateinit var ingredientsAdapter: IngredientsAdapter
     private lateinit var manager: RequestManager
     private lateinit var dialog: ProgressDialog
 
@@ -43,8 +43,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
         val shareButton = findViewById<Button>(R.id.btn_share)
         shareButton.setOnClickListener {
-            val intent = Intent(this, Share::class.java)
-            startActivity(intent)
+            shareRecipe()
         }
     }
 
@@ -56,6 +55,20 @@ class RecipeDetailsActivity : AppCompatActivity() {
         recycler_meal_ingredients = findViewById(R.id.recycler_meal_ingredients)
     }
 
+    private fun shareRecipe() {
+        val title = textView_meal_name.text.toString()
+        val source = textView_meal_source.text.toString()
+        val summary = textView_meal_summary.text.toString()
+
+        val shareText = "🍽️ Check out this recipe!\n\n$title\nSource: $source\nSummary: $summary"
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"))
+    }
+
     private val recipeDetailsListener = object : RecipeDetailsListener {
         override fun didFetch(response: RecipeDetailsResponse, message: String) {
             dialog.dismiss()
@@ -65,7 +78,6 @@ class RecipeDetailsActivity : AppCompatActivity() {
             Picasso.get().load(response.image).into(imageView_meal_image)
 
             Log.d("RecipeDetailsActivity", "Passing ingredients to adapter: ${response.extendedIngredients?.size ?: 0}")
-            //recycler_meal_ingredients.setHasFixedSize(true)
             recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity, LinearLayoutManager.HORIZONTAL, false)
             ingredientsAdapter = IngredientsAdapter(this@RecipeDetailsActivity, response.extendedIngredients ?: emptyList())
             recycler_meal_ingredients.adapter = ingredientsAdapter

@@ -1,5 +1,6 @@
 package com.example.swiftbite.Adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ class RandomRecipeAdapter(private val context: Context, private val list: List<R
         return RandomRecipeViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RandomRecipeViewHolder, position: Int) {
         holder.textView_title.text = list[position].title
         holder.textView_title.isSelected = true

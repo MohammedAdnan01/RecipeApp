@@ -1,6 +1,8 @@
 package com.example.swiftbite
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.IngredientRecipeAdapter
 import com.example.swiftbite.Listeners.IngredientRecipeResponseListener
 import com.example.swiftbite.Models.IngredientBasedRecipe
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class RecommendDishesActivity : AppCompatActivity() {
 
@@ -29,6 +32,31 @@ class RecommendDishesActivity : AppCompatActivity() {
 
         requestManager = RequestManager(this)
         fetchRecipesBasedOnIngredients()
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+
+        bottomNav.menu.findItem(R.id.nav_explore).isChecked = true
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent, options.toBundle())
+                    return@setOnItemSelectedListener true
+                }
+                R.id.nav_explore -> {
+                    return@setOnItemSelectedListener true // Already in this activity
+                }
+                R.id.nav_setting -> {
+                    intent = Intent(this, SettingActivity::class.java)
+                    startActivity(intent, options.toBundle())
+                    return@setOnItemSelectedListener true
+                }
+            }
+            false
+        }
     }
 
     private fun fetchRecipesBasedOnIngredients() {
