@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.IngredientsAdapter
 import com.example.swiftbite.Listeners.RecipeDetailsListener
+import com.example.swiftbite.Models.Instruction
 import com.example.swiftbite.Models.Nutrient
 import com.example.swiftbite.Models.RecipeDetailsResponse
 import com.squareup.picasso.Picasso
@@ -22,7 +23,8 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private var id: Int = 0
     private lateinit var textView_meal_name: TextView
     private lateinit var textView_meal_source: TextView
-    private lateinit var textView_meal_summary: TextView
+    //private lateinit var textView_meal_summary: TextView
+    private lateinit var textViewMealInstructions: TextView
     private lateinit var imageView_meal_image: ImageView
     private lateinit var recycler_meal_ingredients: RecyclerView
     private lateinit var ingredientsAdapter: IngredientsAdapter
@@ -54,7 +56,8 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private fun findViews() {
         textView_meal_name = findViewById(R.id.textView_meal_name)
         textView_meal_source = findViewById(R.id.textView_meal_source)
-        textView_meal_summary = findViewById(R.id.textView_meal_summary)
+        //textView_meal_summary = findViewById(R.id.textView_meal_summary)
+        textViewMealInstructions = findViewById(R.id.textView_meal_instructions)
         imageView_meal_image = findViewById(R.id.imageView_meal_image)
         recycler_meal_ingredients = findViewById(R.id.recycler_meal_ingredients)
         btnNutritionBreakdown = findViewById(R.id.btn_nutrition_breakdown)
@@ -63,9 +66,9 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private fun shareRecipe() {
         val title = textView_meal_name.text.toString()
         val source = textView_meal_source.text.toString()
-        val summary = textView_meal_summary.text.toString()
+        val instructions = textViewMealInstructions.text.toString()
 
-        val shareText = "🍽️ Check out this recipe!\n\n$title\nSource: $source\nSummary: $summary"
+        val shareText = "🍽️ Check out this recipe!\n\n$title\nSource: $source\nPreparation Steps:\n$instructions"
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
@@ -80,8 +83,10 @@ class RecipeDetailsActivity : AppCompatActivity() {
             recipeDetails = response
             textView_meal_name.text = response.title
             textView_meal_source.text = response.sourceName
-            textView_meal_summary.text = response.summary
+            //textView_meal_summary.text = response.summary
             Picasso.get().load(response.image).into(imageView_meal_image)
+
+            textViewMealInstructions.text = formatInstructions(response.analyzedInstructions)
 
             Log.d("RecipeDetailsActivity", "Passing ingredients to adapter: ${response.extendedIngredients?.size ?: 0}")
             recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity, LinearLayoutManager.HORIZONTAL, false)
@@ -98,6 +103,27 @@ class RecipeDetailsActivity : AppCompatActivity() {
             Toast.makeText(this@RecipeDetailsActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun formatInstructions(instructions: List<Instruction>?): String {
+        if (instructions.isNullOrEmpty()) {
+            return "No preparation steps available."
+        }
+
+        val builder = StringBuilder()
+        instructions.forEach { instruction ->
+            // Add section name if available
+            if (!instruction.name.isNullOrEmpty()) {
+                builder.append("${instruction.name}:\n")
+            }
+            // Add each step
+            instruction.steps?.forEach { step ->
+                builder.append("${step.number}. ${step.step ?: "Step not available"}\n")
+            }
+            builder.append("\n") // Add extra line between sections
+        }
+        return builder.toString().trim()
+    }
+
     private fun showNutritionBreakdownDialog() {
         val nutrients = recipeDetails?.nutrition?.nutrients ?: emptyList()
         if (nutrients.isEmpty()) {

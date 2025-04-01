@@ -16,7 +16,7 @@ data class RecipeDetailsResponse (
     val healthScore: Double,
     val spoonacularScore: Double,
     val pricePerServing: Double,
-    val analyzedInstructions: List<Any?>,
+    val analyzedInstructions: List<Instruction>?,
     val cheap: Boolean,
     val creditsText: String,
     val cuisines: List<Any?>,
