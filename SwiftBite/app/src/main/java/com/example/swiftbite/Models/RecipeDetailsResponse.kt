@@ -1,7 +1,7 @@
 package com.example.swiftbite.Models
 
 data class RecipeDetailsResponse (
-    val id: Long,
+    val id: Int,
     val title: String,
     val image: String,
     val imageType: String,

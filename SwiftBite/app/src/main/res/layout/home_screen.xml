@@ -29,7 +29,7 @@
                 app:searchIcon="@drawable/ic_search"
                 app:queryHint="Search your recipe..."/>
 
-            <!-- Microphone Button -->
+            <!-- Microphone Button
             <ImageView
                 android:id="@+id/micButton"
                 android:layout_width="48dp"
@@ -42,6 +42,7 @@
                 android:focusable="true"
                 android:src="@drawable/baseline_mic_24"
                 tools:ignore="TouchTargetSizeCheck" />
+               -->
 
         </LinearLayout>
 

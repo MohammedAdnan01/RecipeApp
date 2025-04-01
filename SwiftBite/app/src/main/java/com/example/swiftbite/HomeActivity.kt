@@ -99,7 +99,7 @@
                 false
             }
 
-            initializeSpeechRecognizer()
+            /*initializeSpeechRecognizer()
 
             // Set up microphone button for speech recognition
             val micButton = findViewById<ImageView>(R.id.micButton)
@@ -114,9 +114,9 @@
                 } else {
                     Toast.makeText(this@HomeActivity, "No network connection. Please check your internet.", Toast.LENGTH_SHORT).show()
                 }
-            }
+            }*/
         }
-
+/*
         private fun initializeSpeechRecognizer() {
             try {
                 if (SpeechRecognizer.isRecognitionAvailable(this)) {
@@ -199,7 +199,7 @@
 
         private fun requestAudioPermission() {
             requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), 1)
-        }
+        }*/
 
         private fun showLoadingDialog() {
             val progressBar = ProgressBar(this)
@@ -210,10 +210,10 @@
             dialog = builder.create()
             dialog?.show()
         }
-
+/*
         private fun dismissLoadingDialog() {
             dialog?.dismiss()
-        }
+        }*/
 
         private val randomRecipeResponseListener = object : RandomRecipeResponseListener {
             override fun didFetch(response: RandomRecipeApiResponse, message: String) {

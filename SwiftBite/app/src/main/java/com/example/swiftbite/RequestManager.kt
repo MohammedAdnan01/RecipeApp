@@ -23,7 +23,6 @@ class RequestManager(private val context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    // Existing method for random recipes
     fun getRandomRecipes(listener: RandomRecipeResponseListener, tags: List<String>) {
         val callRandomRecipes = retrofit.create(CallRandomRecipes::class.java)
         val call = callRandomRecipes.callRandomRecipe(context.getString(R.string.api_key), "10", tags)
@@ -46,20 +45,24 @@ class RequestManager(private val context: Context) {
 
     fun getRecipeDetails(listener: RecipeDetailsListener, id: Int) {
         val callRecipeDetails = retrofit.create(CallRecipeDetails::class.java)
-        val call = callRecipeDetails.callRecipeDetails(id, context.getString(R.string.api_key))
+        val call = callRecipeDetails.callRecipeDetails(id, context.getString(R.string.api_key), true)
+        Log.d("RequestManager", "Fetching details for recipe ID: $id")
         call.enqueue(object : Callback<RecipeDetailsResponse> {
             override fun onResponse(call: Call<RecipeDetailsResponse>, response: Response<RecipeDetailsResponse>) {
                 if (!response.isSuccessful) {
+                    Log.e("RequestManager", "Failed to fetch details for ID $id: ${response.message()}")
                     listener.didError(response.message())
                     return
                 }
                 response.body()?.let {
-                    Log.d("RequestManager", "Ingredients size: ${it.extendedIngredients?.size ?: 0}")
+                    Log.d("RequestManager", "Details for ID $id - Ingredients size: ${it.extendedIngredients?.size ?: 0}")
+                    Log.d("RequestManager", "Details for ID $id - Instructions size: ${it.analyzedInstructions?.size ?: 0}")
                     listener.didFetch(it, response.message())
                 } ?: listener.didError("No data received from API")
             }
 
             override fun onFailure(call: Call<RecipeDetailsResponse>, t: Throwable) {
+                Log.e("RequestManager", "Failed to fetch details for ID $id: ${t.message}")
                 listener.didError(t.message ?: "Unknown error")
             }
         })
@@ -68,49 +71,47 @@ class RequestManager(private val context: Context) {
     fun getRecipesByIngredients(listener: IngredientRecipeResponseListener, ingredients: List<String>) {
         val callRecipeByIngredients = retrofit.create(CallRecipeByIngredients::class.java)
 
-        // Convert ingredients list to a comma-separated string
-        val ingredientList = ingredients.joinToString(",")  // Convert list to "carrots,tomatoes"
-
-        // Log the constructed URL for debugging purposes
+        val ingredientList = ingredients.joinToString(",")
         Log.d("Request URL", "https://api.spoonacular.com/recipes/findByIngredients?apiKey=${context.getString(R.string.api_key)}&ingredients=$ingredientList&number=10")
 
-        // Make the call to the API endpoint
         val call = callRecipeByIngredients.callRecipeByIngredients(
-            context.getString(R.string.api_key),  // API Key
-            ingredientList,  // Comma-separated ingredients
-            "10"  // Number of recipes
+            context.getString(R.string.api_key),
+            ingredientList,
+            "10"
         )
 
-        // Handle the response
         call.enqueue(object : Callback<List<IngredientBasedRecipe>> {
             override fun onResponse(call: Call<List<IngredientBasedRecipe>>, response: Response<List<IngredientBasedRecipe>>) {
                 if (!response.isSuccessful) {
-                    listener.didError("Error: ${response.message()}")  // Handle unsuccessful responses
+                    Log.e("RequestManager", "Failed to fetch recipes by ingredients: ${response.message()}")
+                    listener.didError("Error: ${response.message()}")
                     return
                 }
                 response.body()?.let {
-                    listener.didFetch(it, response.message())  // Successfully fetched data
-                } ?: listener.didError("No data received from API")  // Handle empty body
+                    Log.d("RequestManager", "Fetched ${it.size} recipes by ingredients")
+                    it.forEach { recipe ->
+                        Log.d("RequestManager", "Recipe ID: ${recipe.id}, Title: ${recipe.title}")
+                    }
+                    listener.didFetch(it, response.message())
+                } ?: listener.didError("No data received from API")
             }
 
             override fun onFailure(call: Call<List<IngredientBasedRecipe>>, t: Throwable) {
-                listener.didError(t.message ?: "Unknown error occurred")  // Handle failure
+                Log.e("RequestManager", "Failed to fetch recipes by ingredients: ${t.message}")
+                listener.didError(t.message ?: "Unknown error occurred")
             }
         })
     }
 
-    // Interface for recipes based on ingredients API call
     private interface CallRecipeByIngredients {
         @GET("recipes/findByIngredients")
         fun callRecipeByIngredients(
             @Query("apiKey") apiKey: String,
-            @Query("ingredients") ingredients: String,  // Ingredients as a comma-separated list
+            @Query("ingredients") ingredients: String,
             @Query("number") number: String
-        ): Call<List<IngredientBasedRecipe>>  // List of IngredientBasedRecipe objects
+        ): Call<List<IngredientBasedRecipe>>
     }
 
-
-    // Interface for random recipes API call
     private interface CallRandomRecipes {
         @GET("recipes/random")
         fun callRandomRecipe(

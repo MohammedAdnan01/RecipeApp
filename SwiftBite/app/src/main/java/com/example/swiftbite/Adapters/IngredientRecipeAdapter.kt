@@ -2,6 +2,7 @@ package com.example.swiftbite.Adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,13 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Models.IngredientBasedRecipe
 import com.example.swiftbite.R
+import com.example.swiftbite.RecipeDetailsActivity
 import com.squareup.picasso.Picasso
 
-class IngredientRecipeAdapter(private val context: Context, private val list: List<IngredientBasedRecipe>) : RecyclerView.Adapter<IngredientRecipeViewHolder>() {
+class IngredientRecipeAdapter(
+    private val context: Context,
+    private val list: List<IngredientBasedRecipe>
+) : RecyclerView.Adapter<IngredientRecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientRecipeViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.list_random_recipe, parent, false)
@@ -22,11 +27,19 @@ class IngredientRecipeAdapter(private val context: Context, private val list: Li
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: IngredientRecipeViewHolder, position: Int) {
-        holder.textView_title.text = list[position].title
+        val recipe = list[position]
+        holder.textView_title.text = recipe.title
         holder.textView_title.isSelected = true
-        holder.textView_servings.text = "${list[position].usedIngredientCount} Servings"
-        holder.textView_time.text = "${list[position].missedIngredientCount} Ingredients"
-        Picasso.get().load(list[position].image).into(holder.imageView_food)
+        holder.textView_servings.text = "${recipe.usedIngredientCount} Used Ingredients"
+        holder.textView_time.text = "${recipe.missedIngredientCount} Missing Ingredients"
+        Picasso.get().load(recipe.image).into(holder.imageView_food)
+
+        // Add click listener to the item view
+        holder.random_list_container.setOnClickListener {
+            val intent = Intent(context, RecipeDetailsActivity::class.java)
+            intent.putExtra("id", recipe.id.toString()) // Pass the recipe ID
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
