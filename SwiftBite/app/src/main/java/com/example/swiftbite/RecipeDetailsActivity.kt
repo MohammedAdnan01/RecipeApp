@@ -8,11 +8,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftbite.Adapters.IngredientsAdapter
 import com.example.swiftbite.Listeners.RecipeDetailsListener
+import com.example.swiftbite.Models.Nutrient
 import com.example.swiftbite.Models.RecipeDetailsResponse
 import com.squareup.picasso.Picasso
 
@@ -24,8 +26,10 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private lateinit var imageView_meal_image: ImageView
     private lateinit var recycler_meal_ingredients: RecyclerView
     private lateinit var ingredientsAdapter: IngredientsAdapter
+    private lateinit var btnNutritionBreakdown: Button
     private lateinit var manager: RequestManager
     private lateinit var dialog: ProgressDialog
+    private var recipeDetails: RecipeDetailsResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         textView_meal_summary = findViewById(R.id.textView_meal_summary)
         imageView_meal_image = findViewById(R.id.imageView_meal_image)
         recycler_meal_ingredients = findViewById(R.id.recycler_meal_ingredients)
+        btnNutritionBreakdown = findViewById(R.id.btn_nutrition_breakdown)
     }
 
     private fun shareRecipe() {
@@ -72,6 +77,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private val recipeDetailsListener = object : RecipeDetailsListener {
         override fun didFetch(response: RecipeDetailsResponse, message: String) {
             dialog.dismiss()
+            recipeDetails = response
             textView_meal_name.text = response.title
             textView_meal_source.text = response.sourceName
             textView_meal_summary.text = response.summary
@@ -81,11 +87,50 @@ class RecipeDetailsActivity : AppCompatActivity() {
             recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity, LinearLayoutManager.HORIZONTAL, false)
             ingredientsAdapter = IngredientsAdapter(this@RecipeDetailsActivity, response.extendedIngredients ?: emptyList())
             recycler_meal_ingredients.adapter = ingredientsAdapter
+
+            btnNutritionBreakdown.setOnClickListener {
+                showNutritionBreakdownDialog()
+            }
         }
 
         override fun didError(message: String) {
             dialog.dismiss()
             Toast.makeText(this@RecipeDetailsActivity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun showNutritionBreakdownDialog() {
+        val nutrients = recipeDetails?.nutrition?.nutrients ?: emptyList()
+        if (nutrients.isEmpty()) {
+            Toast.makeText(this, "No nutritional data available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Extract key nutrients (Calories, Fat, Carbohydrates, Protein)
+        val calories = nutrients.find { it.name == "Calories" }
+        val fat = nutrients.find { it.name == "Fat" }
+        val carbs = nutrients.find { it.name == "Carbohydrates" }
+        val protein = nutrients.find { it.name == "Protein" }
+
+        // Build the message for the dialog
+        val message = StringBuilder("Nutritional Breakdown (per serving):\n\n")
+        message.append(formatNutrient(calories, "Calories", "kcal"))
+        message.append(formatNutrient(fat, "Fat", "g"))
+        message.append(formatNutrient(carbs, "Carbohydrates", "g"))
+        message.append(formatNutrient(protein, "Protein", "g"))
+
+        // Show the dialog
+        AlertDialog.Builder(this)
+            .setTitle("Nutritional Breakdown")
+            .setMessage(message.toString())
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    private fun formatNutrient(nutrient: Nutrient?, label: String, unit: String): String {
+        return if (nutrient != null && nutrient.amount != null && nutrient.unit != null) {
+            "$label: ${nutrient.amount} ${nutrient.unit}\n"
+        } else {
+            "$label: Not available\n"
         }
     }
 }

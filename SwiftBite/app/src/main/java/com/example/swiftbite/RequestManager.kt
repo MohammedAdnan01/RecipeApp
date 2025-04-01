@@ -124,7 +124,8 @@ class RequestManager(private val context: Context) {
         @GET("recipes/{id}/information")
         fun callRecipeDetails(
             @Path("id") id: Int,
-            @Query("apiKey") apiKey: String
+            @Query("apiKey") apiKey: String,
+            @Query("includeNutrition") includeNutrition: Boolean = true
         ): Call<RecipeDetailsResponse>
     }
 }

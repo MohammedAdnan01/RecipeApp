@@ -38,5 +38,6 @@ data class RecipeDetailsResponse (
     val dishTypes: List<String>,
     val extendedIngredients: List<ExtendedIngredient>,
     val summary: String,
-    val winePairing: WinePairing
+    val winePairing: WinePairing,
+    val nutrition: Nutrition?
 )
