@@ -2,62 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/bg_lightblue"
-    android:padding="16dp">
+    android:background="@color/bg_lightgray"
+    android:padding="24dp">
 
+    <!-- Spacer View for top alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- App Title -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SwiftBites"
-        android:textColor="#000000"
+        android:textColor="@color/primary_blue"
         android:textSize="40sp"
         android:textStyle="bold" />
 
+    <!-- Subtitle -->
     <TextView
         android:id="@+id/subtitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your Personal Meal Planner"
-        android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textColor="@color/text_dark"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"/>
 
+    <!-- Spacer View for spacing between elements -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5" />
 
     <!-- Sign-In Button -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signInButton"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:textSize="22sp"
-        android:padding="15dp"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="@color/text_light"
+        app:cornerRadius="20dp"
+        app:backgroundTint="@color/button_red"
+        android:layout_gravity="center_horizontal"/>
 
-    <Button
+    <!-- Sign-Up Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signUpButton"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="Sign Up"
         android:textSize="22sp"
-        android:padding="15dp"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="@color/text_light"
+        app:cornerRadius="20dp"
+        app:backgroundTint="@color/button_red"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
 
-
+    <!-- Spacer View for bottom alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

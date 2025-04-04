@@ -1,84 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/bg_lightblue"
-    android:gravity="center">
+    android:background="@color/bg_lightgray"
+    android:gravity="center_horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-    <!-- Title TextView, aligned similar to 'Login' text in ConstraintLayout -->
-    <TextView
-        android:id="@+id/textViewIngredientTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Explore dishes based on ingredients"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginBottom="32dp"
-        android:layout_gravity="center" />
-
-    <!-- EditText for adding ingredients -->
-    <EditText
-        android:id="@+id/editTextIngredient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter the ingredients ..."
-        android:background="@android:drawable/edit_text"
-        android:padding="12dp"
-        android:layout_marginBottom="24dp"
-        android:textColor="#000000"
-        android:textSize="16sp" />
-
-    <!-- Button to add ingredients, with consistent styling -->
-    <Button
-        android:id="@+id/buttonAddIngredient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Ingredient"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:backgroundTint="#FFFFFF"
-        android:layout_marginBottom="32dp"
-        android:padding="12dp"
-        android:layout_gravity="center"/>
-
-    <!-- List of ingredients -->
-    <LinearLayout
-        android:id="@+id/ingredientsList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:padding="24dp"
         android:orientation="vertical"
-        android:layout_weight="1"
-        android:scrollbars="vertical"/>
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/textViewIngredientTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Explore dishes based on ingredients"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Ingredient Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter the ingredients ..."
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextIngredient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Add Ingredient Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAddIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Ingredient"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:cornerRadius="20dp"
+            app:backgroundTint="@color/button_red"
+            android:padding="12dp"
+            android:layout_marginBottom="32dp"
+            android:layout_gravity="center" />
+
+        <!-- Dynamic Ingredient List -->
+        <LinearLayout
+            android:id="@+id/ingredientsList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:scrollbars="vertical"/>
     </LinearLayout>
 
-    <Button
+    <!-- Recommend Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonRecommendDishes"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Recommend Dishes"
-        android:textColor="#000000"
+        android:textColor="@color/white"
         android:textSize="16sp"
-        android:backgroundTint="#FFFFFF"
-        android:layout_gravity="center"
+        app:cornerRadius="20dp"
+        app:backgroundTint="@color/button_red"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center" />
 
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/bg_lightgray"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

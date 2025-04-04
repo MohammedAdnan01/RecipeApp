@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:padding="10dp"
     android:layout_marginBottom="8dp"
-    android:background="@android:drawable/edit_text">
+    android:background="@color/bg_lightgray">
 
     <!-- Display the ingredient -->
     <TextView
@@ -24,5 +24,5 @@
         android:layout_height="wrap_content"
         android:text="Delete"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#FF0000"/>
+        android:backgroundTint="@color/button_red"/>
 </LinearLayout>

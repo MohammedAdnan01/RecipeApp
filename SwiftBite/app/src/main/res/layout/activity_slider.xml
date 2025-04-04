@@ -2,26 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/bg_lightblue">
+    android:background="@color/bg_lightgray"
+    android:padding="24dp">
 
     <!-- ViewPager2 to display the slides -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1" />
 
     <!-- "Next" Button to navigate between slides -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/nextButton"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="150dp"
-        android:backgroundTint="#FFFFFF"
-        android:padding="15dp"
+        android:backgroundTint="@color/button_red"
         android:text="Next"
-        android:textColor="#000000"
-        android:textSize="22sp" />
+        android:textColor="@color/text_light"
+        android:textSize="22sp"
+        android:padding="15dp"
+        app:cornerRadius="20dp" />
 </LinearLayout>

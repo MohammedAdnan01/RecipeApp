@@ -63,4 +63,12 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // Navigate back to the LoginOptionsActivity
+        val intent = Intent(this, LoginOptionsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
