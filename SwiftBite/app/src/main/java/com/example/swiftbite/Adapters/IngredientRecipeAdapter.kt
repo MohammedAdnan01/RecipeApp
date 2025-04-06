@@ -21,7 +21,7 @@ class IngredientRecipeAdapter(
 ) : RecyclerView.Adapter<IngredientRecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientRecipeViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_random_recipe, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.recommend_card, parent, false)
         return IngredientRecipeViewHolder(view)
     }
 
