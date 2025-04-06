@@ -1,9 +1,6 @@
 package com.example.swiftbite.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
@@ -26,9 +23,6 @@ class BackgroundMusic : Service() {
         mediaPlayer = MediaPlayer.create(this, R.raw.afternoon)
         mediaPlayer.isLooping = true
         mediaPlayer.setVolume(0.5f, 0.5f)
-        mediaPlayer.start()
-
-        isRunning = true
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -50,6 +44,14 @@ class BackgroundMusic : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val prefs = getSharedPreferences("SwiftBitePrefs", Context.MODE_PRIVATE)
+        val isMusicEnabled = prefs.getBoolean("bg_music_enabled", true)
+
+        if (isMusicEnabled && !mediaPlayer.isPlaying) {
+            mediaPlayer.start()
+            isRunning = true
+        }
+
         return START_STICKY
     }
 
@@ -60,7 +62,5 @@ class BackgroundMusic : Service() {
         isRunning = false
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 }

@@ -46,11 +46,6 @@ class RecipeDetailsActivity : AppCompatActivity() {
         dialog = ProgressDialog(this)
         dialog.setTitle("Loading Details...")
         dialog.show()
-
-        val shareButton = findViewById<Button>(R.id.btn_share)
-        shareButton.setOnClickListener {
-            shareRecipe()
-        }
     }
 
     private fun findViews() {
@@ -63,19 +58,28 @@ class RecipeDetailsActivity : AppCompatActivity() {
         btnNutritionBreakdown = findViewById(R.id.btn_nutrition_breakdown)
     }
 
-    private fun shareRecipe() {
+    private fun shareRecipe(sourceUrl: String) {
         val title = textView_meal_name.text.toString()
         val source = textView_meal_source.text.toString()
-        val instructions = textViewMealInstructions.text.toString()
 
-        val shareText = "🍽️ Check out this recipe!\n\n$title\nSource: $source\nPreparation Steps:\n$instructions"
+        val shareText = """
+        🍽️ Check out this recipe!
+
+        Title: $title
+        Source: $source
+
+        View the full recipe here:
+        $sourceUrl
+    """.trimIndent()
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
+
         startActivity(Intent.createChooser(shareIntent, "Share Recipe via"))
     }
+
 
     private val recipeDetailsListener = object : RecipeDetailsListener {
         override fun didFetch(response: RecipeDetailsResponse, message: String) {
@@ -83,7 +87,6 @@ class RecipeDetailsActivity : AppCompatActivity() {
             recipeDetails = response
             textView_meal_name.text = response.title
             textView_meal_source.text = response.sourceName
-            //textView_meal_summary.text = response.summary
             Picasso.get().load(response.image).into(imageView_meal_image)
 
             textViewMealInstructions.text = formatInstructions(response.analyzedInstructions)
@@ -92,6 +95,15 @@ class RecipeDetailsActivity : AppCompatActivity() {
             recycler_meal_ingredients.layoutManager = LinearLayoutManager(this@RecipeDetailsActivity, LinearLayoutManager.HORIZONTAL, false)
             ingredientsAdapter = IngredientsAdapter(this@RecipeDetailsActivity, response.extendedIngredients ?: emptyList())
             recycler_meal_ingredients.adapter = ingredientsAdapter
+
+            // Get the sourceUrl from the response
+            val sourceUrl = response.sourceUrl ?: ""
+
+            // Set up the share button click listener to pass the sourceUrl
+            val shareButton = findViewById<Button>(R.id.btn_share)
+            shareButton.setOnClickListener {
+                shareRecipe(sourceUrl)  // Pass sourceUrl to shareRecipe
+            }
 
             btnNutritionBreakdown.setOnClickListener {
                 showNutritionBreakdownDialog()

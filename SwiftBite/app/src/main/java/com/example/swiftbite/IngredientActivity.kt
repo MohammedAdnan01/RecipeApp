@@ -1,9 +1,11 @@
 package com.example.swiftbite
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -31,12 +33,19 @@ class IngredientActivity : AppCompatActivity() {
         // Button to add ingredient
         addButton.setOnClickListener {
             val ingredient = ingredientEditText.text.toString().trim()
-            if (ingredient.isNotEmpty()) {
+
+            // Validate the ingredient input
+            if (ingredient.isEmpty()) {
+                Toast.makeText(this, "Please enter an ingredient", Toast.LENGTH_SHORT).show()
+            } else if (!isValidIngredient(ingredient)) {
+                Toast.makeText(this, "Invalid input. Please enter a valid ingredient.", Toast.LENGTH_SHORT).show()
+            } else {
                 ingredients.add(ingredient)
                 updateIngredientsList()
                 ingredientEditText.text.clear()
-            } else {
-                Toast.makeText(this, "Please enter an ingredient", Toast.LENGTH_SHORT).show()
+
+                // Hide the keyboard after adding the ingredient
+                hideKeyboard()
             }
         }
 
@@ -98,5 +107,17 @@ class IngredientActivity : AppCompatActivity() {
     private fun removeIngredient(ingredient: String) {
         ingredients.remove(ingredient)
         updateIngredientsList()  // Refresh the list after removal
+    }
+
+    // Function to validate if the ingredient is valid
+    private fun isValidIngredient(ingredient: String): Boolean {
+        // Basic check for non-alphabetical gibberish (can be enhanced based on need)
+        return ingredient.matches("^[a-zA-Z\\s]+$".toRegex()) // Only allows letters and spaces
+    }
+
+    // Function to hide the keyboard
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(ingredientEditText.windowToken, 0)
     }
 }

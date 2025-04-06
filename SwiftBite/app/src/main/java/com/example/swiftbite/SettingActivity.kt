@@ -27,7 +27,6 @@ class SettingActivity : AppCompatActivity() {
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
         val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
 
         bottomNav.menu.findItem(R.id.nav_setting).isChecked = true
@@ -45,7 +44,7 @@ class SettingActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_setting -> {
-                    return@setOnItemSelectedListener true // Already in this activity
+                    return@setOnItemSelectedListener true // Already here
                 }
             }
             false
@@ -53,10 +52,15 @@ class SettingActivity : AppCompatActivity() {
 
         switchBgMusic = findViewById(R.id.switch_bg_music)
 
-        // Set initial switch state based on service status
-        switchBgMusic.isChecked = BackgroundMusic.isRunning
+        val prefs = getSharedPreferences("SwiftBitePrefs", MODE_PRIVATE)
+        val editor = prefs.edit()
+
+        // Set initial switch state
+        val isMusicEnabled = prefs.getBoolean("bg_music_enabled", true)
+        switchBgMusic.isChecked = isMusicEnabled
 
         switchBgMusic.setOnCheckedChangeListener { _, isChecked ->
+            editor.putBoolean("bg_music_enabled", isChecked).apply()
             if (isChecked) {
                 startService(Intent(this, BackgroundMusic::class.java))
             } else {
@@ -66,10 +70,9 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
-        auth.signOut()  // Sign out from Firebase
-        // Navigate back to LoginActivity after sign-out
+        auth.signOut()
         val intent = Intent(this, LoginOptionsActivity::class.java)
         startActivity(intent)
-        finish()  // Optional: close the current activity
+        finish()
     }
 }

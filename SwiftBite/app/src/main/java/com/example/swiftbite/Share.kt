@@ -1,3 +1,4 @@
+/*
 package com.example.swiftbite
 
 import android.content.Intent
@@ -27,4 +28,4 @@ class Share: AppCompatActivity() {
         // Show the system's share dialog so the user can choose a platform to share on
         startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
-}
+}*/
