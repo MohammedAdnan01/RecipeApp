@@ -2,45 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCE0FF"
+    android:background="@color/bg_lightgray"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="24dp">
 
+    <!-- Spacer View for top alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- App Title -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SwiftBites"
-        android:textColor="#000000"
+        android:textColor="@color/primary_blue"
         android:textSize="40sp"
         android:textStyle="bold" />
 
+    <!-- Subtitle -->
     <TextView
         android:id="@+id/subtitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your Personal Meal Planner"
-        android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textColor="@color/text_dark"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"/>
 
+    <!-- Spacer View for spacing between elements -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcomeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome to SwiftBites!"
-        android:textColor="#000000"
-        android:textSize="25sp" />
+        android:textColor="@color/text_dark"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
 
+    <!-- Spacer View for bottom alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

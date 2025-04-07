@@ -3,50 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="#CCE0FF"
-    android:padding="16dp">
+    android:gravity="center_horizontal"
+    android:background="@color/bg_lightgray"
+    android:padding="24dp">
 
+    <!-- Spacer View for top alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Title Text -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Explore delicious recipes"
         android:textSize="28sp"
-        android:textColor="#000000"
+        android:textColor="@color/primary_blue"
         android:textStyle="bold"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginBottom="8dp"/>
 
+    <!-- Subtitle Text -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="with minimal ingredients"
         android:textSize="24sp"
-        android:textColor="#000000"
+        android:textColor="@color/primary_blue"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="32dp" />
 
+    <!-- Spacer View for spacing between subtitle and other content -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/nextButton"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="Let's get started"
-        android:textSize="22sp"
-        android:padding="15dp"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
-        android:layout_gravity="center_horizontal" />
-
+    <!-- Spacer View for bottom alignment -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
