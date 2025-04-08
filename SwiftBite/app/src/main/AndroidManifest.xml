@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".MyApp"
@@ -19,6 +21,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftBite"
         tools:targetApi="31">
+        <receiver android:name=".NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.swiftbite.NOTIFICATION_ACTION" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".RecommendDishesActivity"
             android:exported="false"
