@@ -2,7 +2,7 @@
 
 ## **✨ Project Overview**
 
-This Android application, "SwiftBites," is a modern food recipe app designed to make meal planning and preparation easier, more enjoyable, and more personalized. Built with Kotlin and leveraging the latest Android development practices, it aims to provide a seamless and intuitive experience for home cooks and food enthusiasts alike.
+This Android application, "SwiftBites" is a modern food recipe app designed to make meal planning and preparation easier, more enjoyable, and more personalized. Built with Kotlin and leveraging the latest Android development practices, it aims to provide a seamless and intuitive experience for home cooks and food enthusiasts alike.
 
 ## **📚 Table of Contents**
 
