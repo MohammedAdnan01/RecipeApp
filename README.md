@@ -16,11 +16,8 @@ This Android application, "SwiftBites," is a modern food recipe app designed to 
   * [Scalable Settings Menu](https://www.google.com/search?q=%23scalable-settings-menu)  
 * [💻 Technologies Used](https://www.google.com/search?q=%23-technologies-used)  
 * [🚀 Development Steps](https://www.google.com/search?q=%23-development-steps)  
-* [💡 Ideas for Improvement and Future Enhancements](https://www.google.com/search?q=%23-ideas-for-improvement-and-future-enhancements)  
-* [📺 Video Demonstration](https://www.google.com/search?q=%23-video-demonstration)  
-* [🛠️ How to Run Locally](https://www.google.com/search?q=%23-how-to-run-locally)  
-* [🤝 Contributing](https://www.google.com/search?q=%23-contributing)  
-* [📄 License](https://www.google.com/search?q=%23-license)
+* [💡 Scope for Improvement and Future Enhancements](https://www.google.com/search?q=%23-scope-for-improvement-and-future-enhancements)  
+* [🛠️ How to Run Locally](https://www.google.com/search?q=%23-how-to-run-locally)
 
 ## **🌟 Features**
 
@@ -91,7 +88,7 @@ The development of this application followed a structured approach, typically in
 9. **Testing:** Conducting unit and integration tests using JUnit, AndroidX JUnit, and Espresso to ensure functionality, stability, and a smooth user experience.  
 10. **Refinement & Optimization:** Continuously improving performance, responsiveness, and overall user experience.
 
-## **💡 Ideas for Improvement and Future Enhancements**
+## **💡 Scope for Improvement and Future Enhancements**
 
 As this is the initial version of the SwiftBites app, there's significant room for growth and various improvements to enhance the user experience and expand functionality:
 
@@ -107,10 +104,6 @@ As this is the initial version of the SwiftBites app, there's significant room f
   * Implement a rating and review system for recipes.  
   * Enable users to follow other users or chefs.  
   * Add a comments section for recipes.  
-* **Shopping List Enhancements:**  
-  * Categorize shopping list items (e.g., produce, dairy, pantry).  
-  * Allow users to mark items as purchased.  
-  * Integrate with smart home devices or grocery delivery services.  
 * **Dietary Profile Management:**  
   * Enable users to set up detailed dietary profiles (allergies, preferences, health goals) that automatically filter recipe suggestions.  
 * **Offline Mode Expansion:**  
@@ -118,20 +111,7 @@ As this is the initial version of the SwiftBites app, there's significant room f
 * **Interactive Cooking Mode:**  
   * Implement a "cook mode" with features like hands-free navigation through steps (e.g., voice commands), timers, and step-by-step visuals.  
 * **Ingredient Substitution Suggestions:**  
-  * Provide suggestions for ingredient substitutions based on common alternatives or dietary needs.  
-* **Performance and UI/UX Refinements:**  
-  * Continuous optimization for faster loading times and smoother animations.  
-  * Further enhance the visual design and user flow based on user feedback.  
-* **Monetization Opportunities (Optional):**  
-  * Consider premium features, ad integration (non-intrusive), or affiliate links for ingredients/kitchen tools.  
-* **Multi-language Support:**  
-  * Offer the app in multiple languages to reach a wider audience.
-
-## **📺 Video Demonstration**
-
-Check out a live demonstration of the app's features and functionality:
-
-[https://drive.google.com/file/d/1ihYMHIAhBlLDHwcqQUlV5rFqtRwHyshR/view?usp=sharing](https://drive.google.com/file/d/1ihYMHIAhBlLDHwcqQUlV5rFqtRwHyshR/view?usp=sharing)
+  * Provide suggestions for ingredient substitutions based on common alternatives or dietary needs.
 
 ## **🛠️ How to Run Locally**
 
@@ -151,18 +131,3 @@ To get a copy of the project up and running on your local machine for developmen
    * Connect an Android device or start an AVD (Android Virtual Device) emulator.  
    * Click the Run button (green triangle) in the toolbar to install and launch the app on your selected device/emulator.
 
-## **🤝 Contributing**
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project  
-2. Create your Feature Branch (git checkout \-b feature/AmazingFeature)  
-3. Commit your Changes (git commit \-m 'Add some AmazingFeature')  
-4. Push to the Branch (git push origin feature/AmazingFeature)  
-5. Open a Pull Request
-
-## **📄 License**
-
-Distributed under the MIT License. See LICENSE for more information.
-
-**Note:** Remember to replace placeholder text like YOUR\_USERNAME, YOUR\_REPOSITORY\_NAME, and ensure the UI Toolkit and Local Database sections accurately reflect your implementation if they differ from the common assumptions (e.g., if you used XML layouts instead of Jetpack Compose, or if local data persistence is not a feature).
